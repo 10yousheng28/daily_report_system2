@@ -30,9 +30,10 @@
                     &nbsp;さん&nbsp;&nbsp;&nbsp; <a href="<c:url value='/logout' />">ログアウト</a>
                 </div>
             </c:if>
+            </div>
             <div id="content">${param.content}</div>
+
             <div id="footer">by Taro Kirameki.</div>
-        </div>
     </div>
 </body>
 </html>
