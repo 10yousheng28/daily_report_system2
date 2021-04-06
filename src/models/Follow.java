@@ -1,5 +1,6 @@
 package models;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -40,9 +41,9 @@ public class Follow {
     @JoinColumn(name = "followed_employee_id", nullable = false)
     private Employee followed_employee;
 
-    //フォローした時刻
+    //フォローした日
     @Column(name = "followed_at", nullable = false)
-    private Timestamp followed_at;
+    private Date followed_at;
 
     //フォローされた人が日報を更新した時刻
     @ManyToOne
