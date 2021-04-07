@@ -1,7 +1,6 @@
 package models;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @NamedQueries({
-        @NamedQuery( //フォローテーブルの情報すべてを取得（テスト用JPQL文。）
+        @NamedQuery( //フォローテーブルの情報すべてを取得（テスト用JPQL文。完成後消す。）
                 name = "getAllFollowers",
                 query = "SELECT f FROM Follow AS f ORDER BY f.id DESC"
         )
@@ -45,10 +44,12 @@ public class Follow {
     @Column(name = "followed_at", nullable = false)
     private Date followed_at;
 
-    //フォローされた人が日報を更新した時刻
-    @ManyToOne
-    @JoinColumn(name = "report_updated_at", nullable = false)
-    private Report report_updated_at;
+    //フォローされた人が日報を更新した時刻(保留中)
+    //@ManyToOne
+    //@JoinColumn(name = "report_updated_at", nullable = false)
+    //private Report report_updated_at;
+
+    //setter/getter
 
     public Integer getId() {
         return id;
@@ -74,20 +75,20 @@ public class Follow {
         this.followed_employee = followed_employee;
     }
 
-    public Timestamp getFollowed_at() {
+    public Date getFollowed_at() {
         return followed_at;
     }
 
-    public void setFollowed_at(Timestamp followed_at) {
+    public void setFollowed_at(Date followed_at) {
         this.followed_at = followed_at;
     }
 
-    public Report getReport_updated_at() {
-        return report_updated_at;
-    }
+    //public Report getReport_updated_at() {
+      //  return report_updated_at;
+    //}
 
-    public void setReport_updated_at(Report report_updated_at) {
-        this.report_updated_at = report_updated_at;
-    }
+    //public void setReport_updated_at(Report report_updated_at) {
+    //    this.report_updated_at = report_updated_at;
+    //}
 
 }
