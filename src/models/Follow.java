@@ -15,10 +15,18 @@ import javax.persistence.Table;
 
 @Entity
 @NamedQueries({
-        @NamedQuery( //フォローテーブルの情報すべてを取得（テスト用JPQL文。完成後消す。）
+        @NamedQuery( //フォローテーブルの情報すべてを取得（テスト用JPQL文。）
                 name = "getAllFollowers",
                 query = "SELECT f FROM Follow AS f ORDER BY f.id DESC"
-        )
+        ),
+        @NamedQuery( //ログインしている人がフォローしている従業員のみを取得
+                name = "getMyAllFollowers",
+                query = "SELECT f FROM Follow AS f WHERE f.employee = :employee ORDER BY f.id DESC"
+        ),
+        @NamedQuery( //現在のフォロー数をカウント
+                name = "getMyFollowersCount",
+                query = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = :employee"
+                )
 })
 @Table(name = "followers")
 

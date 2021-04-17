@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Employee;
 import models.Follow;
 import utils.DBUtil;
 
@@ -35,11 +36,30 @@ public class FollowersIndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
-        List<Follow> followers = em.createNamedQuery("getAllFollowers", Follow.class).getResultList();
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+
+        int page;
+        try{
+            page = Integer.parseInt(request.getParameter("page"));
+        } catch(Exception e) {
+            page = 1;
+        }
+
+        List<Follow> followers = em.createNamedQuery("getMyAllFollowers", Follow.class)
+        .setParameter("employee", login_employee)
+        .setFirstResult(15 * (page - 1))
+        .setMaxResults(15)
+        .getResultList();
+
+        long followers_count = (long)em.createNamedQuery("getMyFollowersCount", Long.class)
+                .setParameter("employee", login_employee)
+                .getSingleResult();
 
         em.close();
 
         request.setAttribute("followers", followers);
+        request.setAttribute("followers_count", followers_count);
+        request.setAttribute("page", page);
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/followers/index.jsp");
         rd.forward(request, response);

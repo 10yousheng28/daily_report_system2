@@ -36,16 +36,14 @@ public class FollowersCreateServlet extends HttpServlet {
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-
+            //Followのインスタンス生成
             Follow f = new Follow();
 
-            //フォローする人（つまりログインしている人）のidデータ保存
             f.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
 
-            //フォローされる人のidデータ保存(FollowersNewServletでリクエストスコープにセットしたidを取得)
-            f.setFollowed_employee((Employee)request.getAttribute("fId"));
+            Employee followed_employee = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
+            f.setFollowed_employee(followed_employee);
 
-            //「フォローした日」のデータ保存
             Date followed_at = new Date(System.currentTimeMillis());
             String rd_str = request.getParameter("followed_at");
             if(rd_str != null && !rd_str.equals("")){
@@ -53,18 +51,17 @@ public class FollowersCreateServlet extends HttpServlet {
             }
             f.setFollowed_at(followed_at);
 
-            //フォローされている人の日報更新時刻(Reportのupdated_atと一致させたい)(保留)
-            //f.setReport_updated_at((Report)request.getSession().getAttribute;
-
             em.getTransaction().begin();
             em.persist(f);
             em.getTransaction().commit();
-            //「フォロー完了」のフラッシュメッセージ(リダイレクト先の日報一覧で表示される)
-            request.getSession().setAttribute("flush", "フォローしました。");
+
             em.close();
 
-            //フォロー後、「日報　一覧」のページへリダイレクト
-            response.sendRedirect("/reports/index");
-    }
+            //「フォロー完了」のフラッシュメッセージ(リダイレクトで表示される)
+            request.getSession().setAttribute("flush", "フォローしました。");
+
+            //フォロー後、「フォローリスト」のページへリダイレクト
+            response.sendRedirect(request.getContextPath() + "/employees/index");
+        }
     }
 }

@@ -38,7 +38,12 @@
                 </table>
                 <p>
                     <a href="<c:url value='/employees/edit?id=${employee.id}' />">この従業員情報を編集する</a>
-                </p>
+
+                <c:if test="${sessionScope.login_employee.id != employee.id}">
+                   <form method="POST" action="<c:url value='/followers/create?id=${employee.id}' />">
+                    <c:import url="/WEB-INF/views/followers/_form.jsp" />
+        </form>
+                </c:if>
             </c:when>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>

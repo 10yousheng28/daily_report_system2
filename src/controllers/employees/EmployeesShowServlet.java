@@ -36,7 +36,7 @@ public class EmployeesShowServlet extends HttpServlet {
         Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
 
         em.close();
-
+        request.setAttribute("_token", request.getSession().getId()); //_tokenをリクエストにセット
         request.setAttribute("employee", e);
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/show.jsp");
