@@ -58,7 +58,7 @@ public class FollowersCreateServlet extends HttpServlet {
             em.close();
 
             //「フォロー完了」のフラッシュメッセージ(リダイレクトで表示される)
-            request.getSession().setAttribute("flush", "フォローしました。");
+            request.getSession().setAttribute("flush", followed_employee.getName() +"をフォローしました。");
 
             //フォロー後、「フォローリスト」のページへリダイレクト
             response.sendRedirect(request.getContextPath() + "/employees/index");

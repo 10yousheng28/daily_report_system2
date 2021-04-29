@@ -26,6 +26,14 @@ import javax.persistence.Table;
         @NamedQuery( //現在のフォロー数をカウント
                 name = "getMyFollowersCount",
                 query = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = :employee"
+                ),
+        @NamedQuery( //ログインしている人のidとフォロー解除される人のidが一致する情報をすべて取得
+                name = "getMyFollowerUnfollowed",
+                query = "SELECT f FROM Follow AS f WHERE f.employee = :employee_id AND f.followed_employee = :followed_employee_id"
+                ),
+        @NamedQuery( //ログインしている人とフォローしようとしている人のidが一致するデータがfollowersテーブルにいくつあるか確認
+                name = "getTheFollowerCount",
+                query = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = :employee_id AND f.followed_employee = :followed_employee_id"
                 )
 })
 @Table(name = "followers")

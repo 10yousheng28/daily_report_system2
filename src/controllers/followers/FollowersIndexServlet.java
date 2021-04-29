@@ -57,12 +57,19 @@ public class FollowersIndexServlet extends HttpServlet {
 
         em.close();
 
+
         request.setAttribute("followers", followers);
         request.setAttribute("followers_count", followers_count);
         request.setAttribute("page", page);
 
+        //フラッシュメッセージ
+        if(request.getSession().getAttribute("flush") != null) {
+            request.setAttribute("flush", request.getSession().getAttribute("flush"));
+            request.getSession().removeAttribute("flush");
+        }
+
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/followers/index.jsp");
         rd.forward(request, response);
     }
+    }
 
-}

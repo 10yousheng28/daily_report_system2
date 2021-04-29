@@ -36,6 +36,10 @@ import javax.persistence.Table;
     @NamedQuery(
             name = "getFollowersReports", //該当するフォロワーの日報を取得する
             query = "SELECT r FROM Report AS r WHERE r.employee = :followed_employee ORDER BY r.id DESC"
+            ),
+    @NamedQuery(
+            name = "getFollowersReportCounts", //該当するフォロワーの日報の数をカウントする
+            query = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :followed_employee"
             )
 })
 @Entity

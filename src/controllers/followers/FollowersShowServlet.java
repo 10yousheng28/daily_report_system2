@@ -34,10 +34,12 @@ public class FollowersShowServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         EntityManager em = DBUtil.createEntityManager();
 
         Employee followed_employee = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
-System.out.println(followed_employee.getName());
+        System.out.println(followed_employee.getName()); //確認用
+        System.out.println(followed_employee.getId());
         int page;
         try{
             page = Integer.parseInt(request.getParameter("page"));
@@ -50,17 +52,25 @@ System.out.println(followed_employee.getName());
                 .setFirstResult(15 * (page - 1))
                 .setMaxResults(15)
                 .getResultList();
+
+        long f_reports_count = (long) em.createNamedQuery("getFollowersReportCounts", Long.class)
+                .setParameter("followed_employee", followed_employee)
+                .getSingleResult();
+        System.out.println("一致するデータは全" + f_reports_count + "件");
+
         em.close();
-System.out.println(f_reports.size() + "件");
+
         request.setAttribute("f_reports", f_reports);
-        //request.setAttribute("reports_count", reports_count);  (あとで加える)
+        request.setAttribute("f_reports_count", f_reports_count);
         request.setAttribute("page", page);
-        System.out.println("error2");
-        if(request.getSession().getAttribute("flush") != null) {
-            request.setAttribute("flush", request.getSession().getAttribute("flush"));
-            request.getSession().removeAttribute("flush");
-        }
-        System.out.println("error3");
+        request.setAttribute("followed_employee", followed_employee);
+        request.getSession().setAttribute("followed_employee", followed_employee.getId()); //IDをセッションスコープに保存
+
+        //if(request.getSession().getAttribute("flush") != null) {
+            //request.setAttribute("flush", request.getSession().getAttribute("flush"));
+            //request.getSession().removeAttribute("flush");
+
+//        }
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/followers/show.jsp");
         rd.forward(request, response);
     }
